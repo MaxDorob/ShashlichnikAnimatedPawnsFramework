@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimatedPawnsFramework", "AnimatedPawnsFramework.csproj", "{CA43FCEB-20C8-4B86-95EB-4A1D2FA3EFD9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA43FCEB-20C8-4B86-95EB-4A1D2FA3EFD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA43FCEB-20C8-4B86-95EB-4A1D2FA3EFD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA43FCEB-20C8-4B86-95EB-4A1D2FA3EFD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA43FCEB-20C8-4B86-95EB-4A1D2FA3EFD9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E88CD58-62DA-4975-81FF-0803EC04B3B5}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ModMetaData>
+  <name>Shashlichnik Animated Pawns Framework</name>
+  <author>Shashlichnik ;p (aka Шашлычник ;р)</author>
+  <supportedVersions>
+    <li>1.5</li>
+  </supportedVersions>
+  <packageId>shashlichnik.AnimatedPawnsFramework</packageId>
+  <modDependencies>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+  <url></url>
+  <description>
+    Framework with tools for animations. Changes nothing itself.
+  </description>
+</ModMetaData>
