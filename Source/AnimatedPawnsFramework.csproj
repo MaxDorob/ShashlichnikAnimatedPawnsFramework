@@ -46,6 +46,7 @@
     <Compile Include="PawnRenderNode_Animated.cs" />
     <Compile Include="PawnRenderNode_RecacheRequested_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartUp.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
