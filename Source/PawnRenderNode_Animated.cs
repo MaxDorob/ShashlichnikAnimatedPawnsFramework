@@ -55,7 +55,7 @@ namespace Shashlichnik
         }
 
         //public KeyframeExtended NextKeyframe => Props.keyframes.FirstOrDefault() ?? Props.keyframes.First();
-        public override bool RecacheRequested
+        public new bool RecacheRequested
         {
             get
             {
