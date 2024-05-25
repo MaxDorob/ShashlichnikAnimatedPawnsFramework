@@ -20,7 +20,8 @@ namespace Shashlichnik
         TickManager tickManager = Find.TickManager;
         public new PawnRenderNodeProperties_Animated Props => props as PawnRenderNodeProperties_Animated;
         public readonly int animationLength;
-        public int CurrentAnimationTick => pawnDead ? 0 + Props.tickOffset : (tickManager.TicksAbs + Props.tickOffset) % animationLength;
+        public float debugTickOffset = 0;
+        public int CurrentAnimationTick => pawnDead ? 0 + Props.tickOffset : (tickManager.TicksAbs + Props.tickOffset + (int)debugTickOffset) % animationLength;
         private KeyframeExtended currentKeyframe;
         private int lastRecachedAbsTick = -1;
         private int nextRecacheTick = 0;
@@ -51,6 +52,11 @@ namespace Shashlichnik
                     return result;
                 }
                 return currentKeyframe;
+            }
+            internal set
+            {
+                currentKeyframe = value;
+                nextRecacheTick = 0;
             }
         }
 
