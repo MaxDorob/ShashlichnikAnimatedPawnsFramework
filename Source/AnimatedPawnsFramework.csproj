@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebugRenderTree_Patch.cs" />
+    <Compile Include="Layers_Patch.cs" />
     <Compile Include="PawnRenderNodeProperties_Animated.cs" />
     <Compile Include="PawnRenderNodeWorker_Animated.cs" />
     <Compile Include="PawnRenderNode_Animated.cs" />
