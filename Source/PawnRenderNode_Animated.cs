@@ -15,13 +15,15 @@ namespace Shashlichnik
         {
             pawnDead = pawn.Dead;
             animationLength = Props.keyframes.Max(x => x.tick) + 3;
+            personalTickOffset = pawn.thingIDNumber;
         }
         bool pawnDead;
         TickManager tickManager = Find.TickManager;
+        public int personalTickOffset;
         public new PawnRenderNodeProperties_Animated Props => props as PawnRenderNodeProperties_Animated;
         public readonly int animationLength;
         public float debugTickOffset = 0;
-        public int CurrentAnimationTick => pawnDead ? 0 + Props.tickOffset : (tickManager.TicksAbs + Props.tickOffset + (int)debugTickOffset) % animationLength;
+        public int CurrentAnimationTick => pawnDead ? 0 + Props.tickOffset : (tickManager.TicksAbs + personalTickOffset + Props.tickOffset + (int)debugTickOffset) % animationLength;
         private KeyframeExtended currentKeyframe;
         private int lastRecachedAbsTick = -1;
         private int nextRecacheTick = 0;
