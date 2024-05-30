@@ -37,7 +37,7 @@ namespace Shashlichnik
                 {
                     int count = Props.keyframes.Count;
                     int i = 0;
-                    KeyframeExtended result = null;
+                    KeyframeExtended result = Props.keyframes[0];
                     for (; i < count; i++)
                     {
                         var current = Props.keyframes[i];
