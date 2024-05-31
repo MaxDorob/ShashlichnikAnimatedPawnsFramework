@@ -46,13 +46,12 @@
     <Compile Include="PawnRenderNodeProperties_Animated.cs" />
     <Compile Include="PawnRenderNodeWorker_Animated.cs" />
     <Compile Include="PawnRenderNode_Animated.cs" />
-    <Compile Include="PawnRenderNode_RecacheRequested_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartUp.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.5.4085</Version>
+      <Version>1.5.4104</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
       <ExcludeAssets>runtime</ExcludeAssets>
