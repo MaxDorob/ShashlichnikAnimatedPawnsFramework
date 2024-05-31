@@ -118,7 +118,7 @@ namespace Shashlichnik
         Dictionary<KeyframeExtended, Graphic> graphics;
         public override string ToString()
         {
-            if (!string.IsNullOrWhiteSpace(props.debugLabel.ToString()))
+            if (!string.IsNullOrWhiteSpace(props.debugLabel?.ToString()))
                 return props.debugLabel;
             return base.ToString();
         }
