@@ -33,7 +33,8 @@ namespace Shashlichnik
             {
                 //return Props.keyframes.LastOrDefault(x=>x.tick < CurrentAnimationTick) ?? Props.keyframes.First();
                 var currentAnimationTick = CurrentAnimationTick;
-                if (currentKeyframe == null || !pawnDead && nextRecacheTick <= currentAnimationTick)
+                var currentAbsTick = tickManager.TicksAbs;
+                if (currentKeyframe == null || !pawnDead && (currentAnimationTick >= nextRecacheTick || Math.Abs(currentAbsTick - lastRecachedAbsTick) > animationLength))
                 {
                     int count = Props.keyframes.Count;
                     int i = 0;
