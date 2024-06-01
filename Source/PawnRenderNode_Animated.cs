@@ -31,7 +31,6 @@ namespace Shashlichnik
         {
             get
             {
-                //return Props.keyframes.LastOrDefault(x=>x.tick < CurrentAnimationTick) ?? Props.keyframes.First();
                 var currentAnimationTick = CurrentAnimationTick;
                 var currentAbsTick = tickManager.TicksAbs;
                 if (currentKeyframe == null || !pawnDead && (currentAnimationTick >= nextRecacheTick || Math.Abs(currentAbsTick - lastRecachedAbsTick) > animationLength))
@@ -62,10 +61,6 @@ namespace Shashlichnik
                 nextRecacheTick = 0;
             }
         }
-
-        //public KeyframeExtended NextKeyframe => Props.keyframes.FirstOrDefault() ?? Props.keyframes.First();
-
-
 
         protected override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
