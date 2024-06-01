@@ -15,7 +15,7 @@ namespace Shashlichnik
         {
             foreach (var instruction in instructions)
             {
-                if (instruction.operand is float && (float)instruction.operand < 0f)
+                if (instruction.operand is float && (float)instruction.operand < 0f && (float)instruction.operand > -30f)
                 {
                     instruction.operand = -50f;
                 }
