@@ -14,7 +14,7 @@ namespace Shashlichnik
         public PawnRenderNode_Animated(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree) : base(pawn, props, tree)
         {
             pawnDead = pawn.Dead;
-            animationLength = Props.keyframes.Max(x => x.tick) + 3;
+            animationLength = Props.keyframes.Max(x => x.tick) + Props.ticksPerAnimation;
             personalTickOffset = pawn.thingIDNumber;
         }
         bool pawnDead;
