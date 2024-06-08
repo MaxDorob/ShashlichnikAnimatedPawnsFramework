@@ -30,16 +30,33 @@ namespace Shashlichnik
             {
                 keyframes = new List<KeyframeExtended>();
             }
-            if (keyframes.Count == 0)
+            if (keyframes.Count < keyframesCount || keyframes.Count == 0)
             {
                 if (keyframesCount <= 0 || keyframesTexPath.NullOrEmpty())
                 {
                     Log.Error($"Keyframes not specified");
                 }
+                var tick = 0;
                 for (int i = 0; i < keyframesCount; i++)
                 {
-                    keyframes.Add(new KeyframeExtended() { texPath = keyframesTexPath + (i + 1), tick = i * ticksPerAnimation });
+                    var texPath = keyframesTexPath + (i + 1);
+                    var keyframe = keyframes.FirstOrDefault(x=>x.texPath == texPath);
+                    if (keyframe == null)
+                    {
+                        keyframe = new KeyframeExtended() { texPath = texPath, tick = tick };
+                        keyframes.Add(keyframe);
+                    }
+                    else
+                    {
+                        if (keyframe.tick < tick)
+                        {
+                            Log.Warning($"Tick of {keyframe.texPath} less than expected");
+                        }
+                        tick = keyframe.tick;
+                    }
+                    tick += ticksPerAnimation;
                 }
+                keyframes = keyframes.OrderBy(x => x.tick).ToList();
             }
         }
 
