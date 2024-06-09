@@ -24,25 +24,33 @@ namespace Shashlichnik
         TickManager tickManager = Find.TickManager;
         public int personalTickOffset;
         public new PawnRenderNodeProperties_Animated Props => props as PawnRenderNodeProperties_Animated;
-        public readonly int animationLength;
+        public int animationLength;
         public float debugTickOffset = 0;
         public int CurrentAnimationTick => pawnDead ? 0 + CurrentLine.tickOffset : (tickManager.TicksAbs - animationStartedTick + (int)debugTickOffset) % animationLength;
         private KeyframeExtended currentKeyframe;
-        private int lastRecachedAbsTick = -1;
         private int nextRecacheTick = 0;
         int animationStartedTick;
-        private KeyframeLine currentLine;
+        protected KeyframeLine currentLine;
+        public int AnimationStartedTick
+        {
+            get => animationStartedTick;
+            set
+            {
+                if (animationStartedTick != value)
+                {
+                    animationStartedTick = value;
+                    OnAnimationRestart();
+                }
+            }
+        }
         public KeyframeExtended CurrentKeyframe
         {
             get
             {
                 var currentAnimationTick = CurrentAnimationTick;
                 var currentAbsTick = tickManager.TicksAbs;
-                if (Math.Abs(currentAbsTick - animationStartedTick) > animationLength)
-                {
-                    currentKeyframe = null;
-                }
-                if (currentKeyframe == null || !pawnDead && (currentAnimationTick >= nextRecacheTick || Math.Abs(currentAbsTick - lastRecachedAbsTick) > animationLength))
+                AnimationStartedTick += ((currentAbsTick - animationStartedTick) / animationLength) * animationLength;
+                if (currentKeyframe == null || (!pawnDead && currentAnimationTick >= nextRecacheTick))
                 {
                     int count = CurrentLine.keyframes.Count;
                     int i = 0;
@@ -59,8 +67,6 @@ namespace Shashlichnik
                     var nextKeyframe = i < count - 1 ? CurrentLine.keyframes[i] : CurrentLine.keyframes[0];
                     currentKeyframe = result;
                     nextRecacheTick = nextKeyframe.tick;
-                    animationStartedTick += ((currentAbsTick - animationStartedTick) / animationLength) * animationLength;
-                    lastRecachedAbsTick = tickManager.TicksAbs;
                     return result;
                 }
                 return currentKeyframe;
@@ -85,7 +91,7 @@ namespace Shashlichnik
             if (graphics == null && HasGraphic(pawn))
             {
                 var lines = KeyframeLinesFor(pawn).ToList();
-                graphics = new Dictionary<KeyframeExtended, Graphic>(lines.Sum(x=>x.keyframes.Count));
+                graphics = new Dictionary<KeyframeExtended, Graphic>(lines.Sum(x => x.keyframes.Count));
                 foreach (var line in lines)
                 {
                     for (int i = 0; i < line.keyframes.Count; i++)
@@ -114,6 +120,10 @@ namespace Shashlichnik
         }
 
         Dictionary<KeyframeExtended, Graphic> graphics;
+        protected virtual void OnAnimationRestart()
+        {
+            currentKeyframe = null;
+        }
         public override string ToString()
         {
             if (!string.IsNullOrWhiteSpace(props.debugLabel?.ToString()))
