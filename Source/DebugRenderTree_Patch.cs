@@ -38,7 +38,7 @@ namespace Shashlichnik
                 return;
             }
             rect2.y += 18f;
-            Widgets.Label(rect2, "Tick offset " + (animated.debugTickOffset + animated.Props.tickOffset));
+            Widgets.Label(rect2, "Tick offset " + (animated.debugTickOffset + animated.CurrentLine.tickOffset));
             rect2.y += rect2.height;
             Widgets.HorizontalSlider(rect2, ref animated.debugTickOffset, new FloatRange(-100f, 100f), "Tick offset: " + animated.debugTickOffset.ToStringByStyle(ToStringStyle.Integer), 3f);
             animated.requestRecache = true;
