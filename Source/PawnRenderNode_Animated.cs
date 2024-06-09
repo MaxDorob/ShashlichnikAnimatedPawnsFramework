@@ -88,7 +88,7 @@ namespace Shashlichnik
         }
         protected override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
-            if (graphics == null && HasGraphic(pawn))
+            if (HasGraphic(pawn))
             {
                 var lines = KeyframeLinesFor(pawn).ToList();
                 graphics = new Dictionary<KeyframeExtended, Graphic>(lines.Sum(x => x.keyframes.Count));
@@ -98,7 +98,7 @@ namespace Shashlichnik
                     {
                         var keyframe = line.keyframes[i];
                         var graphic = GraphicFor(pawn, string.IsNullOrWhiteSpace(keyframe.texPath) ? TexPathFor(pawn) + i.ToString() : keyframe.texPath);
-                        graphics.Add(keyframe, graphic);
+                        graphics[keyframe] = graphic;
                         yield return graphic;
                     }
                 }
