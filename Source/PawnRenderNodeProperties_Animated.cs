@@ -36,6 +36,7 @@ namespace Shashlichnik
             public int ticksPerAnimation = 3;
             public string keyframesTexPath;
             public List<KeyframeExtended> keyframes;
+            public int AnimationLength { get; private set; }
             public class KeyframeExtended : Keyframe
             {
                 public string texPath;
@@ -75,6 +76,7 @@ namespace Shashlichnik
                     }
                     keyframes = keyframes.OrderBy(x => x.tick).ToList();
                 }
+                AnimationLength = keyframes.Max(x => x.tick) + this.ticksPerAnimation;
             }
 
         }

@@ -16,7 +16,7 @@ namespace Shashlichnik
         {
             currentLine = Props.keyframeLines[0];
             pawnDead = pawn.Dead;
-            animationLength = CurrentLine.keyframes.Max(x => x.tick) + CurrentLine.ticksPerAnimation;
+            animationLength = CurrentLine.AnimationLength;
             personalTickOffset = pawn.thingIDNumber.HashOffset() % animationLength;
             animationStartedTick = tickManager.TicksAbs - Math.Abs(personalTickOffset) - CurrentLine.tickOffset;
         }
