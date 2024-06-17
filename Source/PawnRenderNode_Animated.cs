@@ -14,7 +14,7 @@ namespace Shashlichnik
     {
         public PawnRenderNode_Animated(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree) : base(pawn, props, tree)
         {
-            currentLine = Props.keyframeLines[0];
+            currentLine = KeyframeLinesFor(pawn).First();
             pawnDead = pawn.Dead;
             animationLength = CurrentLine.AnimationLength;
             personalTickOffset = pawn.thingIDNumber.HashOffset() % animationLength;
@@ -84,7 +84,7 @@ namespace Shashlichnik
         }
         protected virtual IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {
-            yield return currentLine;
+            yield return Props.keyframeLines[Math.Abs(pawn.thingIDNumber.HashOffset() % Props.keyframeLines.Count)];
         }
         protected override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
