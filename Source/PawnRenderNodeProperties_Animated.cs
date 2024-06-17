@@ -36,12 +36,12 @@ namespace Shashlichnik
             public int ticksPerAnimation = 3;
             public string keyframesTexPath;
             public List<KeyframeExtended> keyframes;
+            public DrawData drawData;
             public int AnimationLength { get; private set; }
             public class KeyframeExtended : Keyframe
             {
                 public string texPath;
             }
-            public DrawData drawData;
 
             public void ResolveReferences()
             {
