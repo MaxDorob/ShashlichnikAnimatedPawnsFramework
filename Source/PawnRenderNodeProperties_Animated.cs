@@ -41,6 +41,7 @@ namespace Shashlichnik
             {
                 public string texPath;
             }
+            public DrawData drawData;
 
             public void ResolveReferences()
             {
