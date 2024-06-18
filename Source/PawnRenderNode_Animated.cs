@@ -49,7 +49,7 @@ namespace Shashlichnik
             {
                 var currentAnimationTick = CurrentAnimationTick;
                 var currentAbsTick = tickManager.TicksAbs;
-                AnimationStartedTick += ((currentAbsTick - animationStartedTick) / animationLength) * animationLength;
+                AnimationStartedTick += ((currentAbsTick - (animationStartedTick + (int)debugTickOffset)) / animationLength) * animationLength;
                 if (currentKeyframe == null || (!pawnDead && currentAnimationTick >= nextRecacheTick))
                 {
                     int count = CurrentLine.keyframes.Count;

@@ -50,7 +50,11 @@ namespace Shashlichnik
             if (node is PawnRenderNode_Animated animated && animated.CurrentLine.drawData != null)
             {
                 var drawData = animated.CurrentLine.drawData;
-                return drawData.LayerForRot(parms.facing, animated.Props.baseLayer) + node.debugLayerOffset;
+                var result = drawData.LayerForRot(parms.facing, -1000f) + node.debugLayerOffset;
+                if (result > -99f)
+                {
+                    return result;
+                }
             }
             return base.LayerFor(node, parms);
         }
