@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace Shashlichnik
 {
@@ -39,6 +40,12 @@ namespace Shashlichnik
             }
             rect2.y += 18f;
             Widgets.Label(rect2, "Tick offset " + (animated.debugTickOffset + animated.CurrentLine.tickOffset));
+            var current = animated.Props.keyframeLines.IndexOf(animated.ForcedLine);
+            var text = "Next line. Cur.: " + (current < 0 ? "-" : (current + 1).ToString()) + $"/{animated.Props.keyframeLines.Count}";
+            if (Widgets.ButtonText(new Rect(rect2.width / 2, rect2.y - 4f, rect2.width / 2, 25f), text, true, true, true, null))
+            {
+                animated.ForcedLine = animated.Props.keyframeLines[current + 1 < animated.Props.keyframeLines.Count ? current + 1 : 0];
+            }
             rect2.y += rect2.height;
             Widgets.HorizontalSlider(rect2, ref animated.debugTickOffset, new FloatRange(-100f, 100f), "Tick offset: " + animated.debugTickOffset.ToStringByStyle(ToStringStyle.Integer), 3f);
             animated.requestRecache = true;

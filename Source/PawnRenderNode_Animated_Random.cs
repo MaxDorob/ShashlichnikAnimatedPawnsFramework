@@ -17,7 +17,7 @@ namespace Shashlichnik
         {
             base.OnAnimationRestart();
             this.currentLine = Props.keyframeLines[Math.Abs(Gen.HashCombineInt(Find.TickManager.TicksAbs, tree.pawn.thingIDNumber) % Props.keyframeLines.Count)];
-            animationLength = currentLine.AnimationLength;
+            animationLength = CurrentLine.AnimationLength;
         }
         protected override IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {

@@ -31,6 +31,7 @@ namespace Shashlichnik
         private int nextRecacheTick = 0;
         int animationStartedTick;
         protected KeyframeLine currentLine;
+        private KeyframeLine forcedLine;
         public int AnimationStartedTick
         {
             get => animationStartedTick;
@@ -78,19 +79,32 @@ namespace Shashlichnik
             }
         }
 
+        public KeyframeLine ForcedLine
+        {
+            get => forcedLine;
+            set
+            {
+                forcedLine = value;
+                AnimationStartedTick = tickManager.TicksAbs;
+            }
+        }
         public virtual KeyframeLine CurrentLine
         {
-            get => currentLine;
+            get => ForcedLine ?? currentLine;
         }
         protected virtual IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {
+            if (forcedLine != null)
+            {
+                yield return forcedLine;
+            }
             yield return Props.keyframeLines[Math.Abs(pawn.thingIDNumber.HashOffset() % Props.keyframeLines.Count)];
         }
         protected override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
             if (HasGraphic(pawn))
             {
-                var lines = KeyframeLinesFor(pawn).ToList();
+                var lines = KeyframeLinesFor(pawn).Distinct().ToList();
                 graphics = new Dictionary<KeyframeExtended, Graphic>(lines.Sum(x => x.keyframes.Count));
                 foreach (var line in lines)
                 {
