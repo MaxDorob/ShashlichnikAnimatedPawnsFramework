@@ -10,18 +10,21 @@ namespace Shashlichnik
 {
     public class PawnRenderNode_Animated_Random : PawnRenderNode_Animated
     {
+        Random random;
         public PawnRenderNode_Animated_Random(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree) : base(pawn, props, tree)
         {
+            random = new Random();
         }
         protected override void OnAnimationRestart()
         {
             base.OnAnimationRestart();
-            this.currentLine = Props.keyframeLines[Math.Abs(Gen.HashCombineInt(Find.TickManager.TicksAbs, tree.pawn.thingIDNumber) % Props.keyframeLines.Count)];
+            this.currentLine = Props.keyframeLines[random.Next(Props.keyframeLines.Count)];
             animationLength = CurrentLine.AnimationLength;
         }
         protected override IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {
             return Props.keyframeLines;
+            
         }
     }
 }
