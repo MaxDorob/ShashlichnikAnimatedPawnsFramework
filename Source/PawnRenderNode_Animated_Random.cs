@@ -24,7 +24,6 @@ namespace Shashlichnik
         protected override IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {
             return Props.keyframeLines;
-            
         }
     }
 }
