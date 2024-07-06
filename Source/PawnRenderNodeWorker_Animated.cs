@@ -68,5 +68,15 @@ namespace Shashlichnik
             }
             return result;
         }
+        public override Vector3 ScaleFor(PawnRenderNode node, PawnDrawParms parms)
+        {
+            var result = base.ScaleFor(node, parms);
+            DrawData drawData;
+            if (node is PawnRenderNode_Animated animated && (drawData = animated.CurrentLine.drawData) != null)
+            {
+                result *= drawData.ScaleFor(parms.pawn);
+            }
+            return result;
+        }
     }
 }
