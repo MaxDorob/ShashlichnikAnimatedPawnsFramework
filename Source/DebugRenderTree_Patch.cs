@@ -47,7 +47,7 @@ namespace Shashlichnik
                 animated.ForcedLine = animated.Props.keyframeLines[current + 1 < animated.Props.keyframeLines.Count ? current + 1 : 0];
             }
             rect2.y += rect2.height;
-            Widgets.HorizontalSlider(rect2, ref animated.debugTickOffset, new FloatRange(-100f, 100f), "Tick offset: " + animated.debugTickOffset.ToStringByStyle(ToStringStyle.Integer), 3f);
+            Widgets.HorizontalSlider(rect2, ref animated.debugTickOffset, new FloatRange(-animated.CurrentLine.tickOffset, animated.CurrentLine.AnimationLength - animated.CurrentLine.tickOffset), "Tick offset: " + animated.debugTickOffset.ToStringByStyle(ToStringStyle.Integer) + $" ({animated.CurrentAnimationTick}/{animated.animationLength})", 3f);
             animated.requestRecache = true;
             animated.CurrentKeyframe = null;
         }

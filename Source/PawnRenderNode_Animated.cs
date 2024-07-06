@@ -26,7 +26,7 @@ namespace Shashlichnik
         public new PawnRenderNodeProperties_Animated Props => props as PawnRenderNodeProperties_Animated;
         public int animationLength;
         public float debugTickOffset = 0;
-        public int CurrentAnimationTick => pawnDead ? 0 + CurrentLine.tickOffset : (tickManager.TicksAbs - animationStartedTick + (int)debugTickOffset) % animationLength;
+        public int CurrentAnimationTick => pawnDead ? 0 + CurrentLine.tickOffset : (tickManager.TicksAbs - AnimationStartedTick + (int)debugTickOffset) % animationLength;
         private KeyframeExtended currentKeyframe;
         private int nextRecacheTick = 0;
         int animationStartedTick;
@@ -50,7 +50,7 @@ namespace Shashlichnik
             {
                 var currentAnimationTick = CurrentAnimationTick;
                 var currentAbsTick = tickManager.TicksAbs;
-                AnimationStartedTick += ((currentAbsTick - (animationStartedTick + (int)debugTickOffset)) / animationLength) * animationLength;
+                AnimationStartedTick += ((currentAbsTick - (animationStartedTick)) / animationLength) * animationLength + (int)debugTickOffset;
                 if (currentKeyframe == null || (!pawnDead && currentAnimationTick >= nextRecacheTick))
                 {
                     int count = CurrentLine.keyframes.Count;

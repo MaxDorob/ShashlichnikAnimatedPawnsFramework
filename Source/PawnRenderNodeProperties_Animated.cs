@@ -77,6 +77,11 @@ namespace Shashlichnik
                     }
                     keyframes = keyframes.OrderBy(x => x.tick).ToList();
                 }
+                if (tickOffset < 0)
+                {
+                    Log.Warning("Tick offset less than 0");
+                    tickOffset = AnimationLength - (tickOffset % AnimationLength);
+                }
                 AnimationLength = keyframes.Max(x => x.tick) + this.ticksPerAnimation;
             }
 
