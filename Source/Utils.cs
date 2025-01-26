@@ -11,10 +11,17 @@ namespace Shashlichnik
     {
         internal static IEnumerable<PawnRenderNode> AllRenderNodes(this PawnRenderNode rootNode)
         {
-            yield return rootNode;
-            foreach (var subNode in rootNode.children.SelectMany(x => AllRenderNodes(x)))
+            if (rootNode == null)
             {
-                yield return subNode;
+                yield break;
+            }
+            yield return rootNode;
+            if (rootNode.children != null)
+            {
+                foreach (var subNode in rootNode.children.SelectMany(AllRenderNodes))
+                {
+                    yield return subNode;
+                }
             }
         }
     }

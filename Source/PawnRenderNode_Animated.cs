@@ -17,18 +17,9 @@ namespace Shashlichnik
             
         }
         public new PawnRenderNodeProperties_Animated Props => props as PawnRenderNodeProperties_Animated;
-        private KeyframeExtended currentKeyframe;
+
+
         private AnimationState animationState;
-
-        public KeyframeExtended CurrentKeyframe
-        {
-            get
-            {
-                return AnimationState.CurrentKeyframe;
-            }
-
-        }
-
         public AnimationState AnimationState
         {
             get
@@ -73,16 +64,11 @@ namespace Shashlichnik
         }
 
         public string parentID => !string.IsNullOrWhiteSpace(Props.groupName) ? Props.groupName : (hediff?.loadID.ToString() ?? gene?.loadID.ToString() ?? apparel?.ThingID ?? this.trait?.def.defName);
-        protected virtual IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
-        {
-            return AnimationState.AvailableLines;
-        }
-        public KeyframeLine CurrentLine => AnimationState.CurrentLine;
         protected override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
             if (HasGraphic(pawn))
             {
-                var lines = KeyframeLinesFor(pawn).Distinct().ToList();
+                var lines = AnimationState.AvailableLines.Distinct().ToList();
                 graphics = new Dictionary<KeyframeExtended, Graphic>(lines.Sum(x => x.keyframes.Count));
                 foreach (var line in lines)
                 {
@@ -96,7 +82,7 @@ namespace Shashlichnik
                 }
             }
         }
-        public new Graphic Graphic => graphics[CurrentKeyframe];
+        public new Graphic Graphic => graphics[AnimationState.CurrentKeyframe];
         public virtual Graphic GraphicFor(Pawn pawn, string text)
         {
             if (text.NullOrEmpty())
@@ -112,32 +98,12 @@ namespace Shashlichnik
         }
 
         Dictionary<KeyframeExtended, Graphic> graphics;
-        protected virtual void OnAnimationRestart()
-        {
-            currentKeyframe = null;
-        }
+
         public override string ToString()
         {
             if (!string.IsNullOrWhiteSpace(props.debugLabel?.ToString()))
                 return props.debugLabel;
             return base.ToString();
-        }
-        public virtual AnimationState ToAnimationState()
-        {
-            var result = new AnimationState();
-            result.availableLinesIds.Clear();
-            var defaultLine = Props.keyframeLines[Math.Abs(this.tree.pawn.thingIDNumber.HashOffset() % Props.keyframeLines.Count)];
-            var id = !string.IsNullOrEmpty(defaultLine.id) ? defaultLine.id : Props.keyframeLines.IndexOf(defaultLine).ToString();
-            result.availableLinesIds.Add(id);
-            if (defaultLine.tickOffset >= 0)
-            {
-                result.AnimationTick = defaultLine.tickOffset % defaultLine.AnimationLength;
-            }
-            else
-            {
-                result.AnimationTick = defaultLine.AnimationLength - (defaultLine.tickOffset % defaultLine.AnimationLength);
-            }
-            return result;
         }
     }
 }

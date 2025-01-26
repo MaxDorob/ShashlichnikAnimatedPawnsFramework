@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace Shashlichnik
@@ -45,6 +43,20 @@ namespace Shashlichnik
             }
             return keyframeLines.IndexOf(line).ToString();
         }
+        internal IEnumerable<KeyframeLine> DefaultLinesFor(Pawn pawn)
+        {
+            if (playOneLine)
+            {
+                foreach (KeyframeLine line in keyframeLines)
+                {
+                    yield return line;
+                }
+            }
+            else
+            {
+                yield return keyframeLines[Math.Abs(pawn.thingIDNumber.HashOffset() % keyframeLines.Count)];
+            }
+        }
         public override void ResolveReferences()
         {
             base.ResolveReferences();
@@ -59,6 +71,7 @@ namespace Shashlichnik
         }
         public string id;
         public string groupName;
+        public bool playOneLine = true;
         public class KeyframeLine
         {
             public string id;

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
+using static HarmonyLib.Code;
 using static Shashlichnik.PawnRenderNodeProperties_Animated;
 using static Shashlichnik.PawnRenderNodeProperties_Animated.KeyframeLine;
+using static UnityEngine.Random;
 
 namespace Shashlichnik
 {
@@ -16,7 +18,19 @@ namespace Shashlichnik
         {
             base.PostExposeData();
             Scribe_Collections.Look(ref animationStates, nameof(animationStates));
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
 
+                foreach (var state in animationStates)
+                {
+                    state.Value.pawn = parent as Pawn;
+                    state.Value.id = state.Key;
+                }
+            }
+        }
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            base.PostSpawnSetup(respawningAfterLoad);
         }
         public override void CompTick()
         {
@@ -30,13 +44,12 @@ namespace Shashlichnik
         public AnimationState GetAnimationState(PawnRenderNode_Animated renderNode)
         {
             var id = renderNode.ID;
-            AnimationState result;
-            if (!animationStates.TryGetValue(id, out result))
+            if (!animationStates.TryGetValue(id, out var result))
             {
-                result = renderNode.ToAnimationState();
+                result = new AnimationState();
+                result.Init(renderNode);
                 animationStates.Add(id, result);
             }
-            result.renderNode ??= renderNode;
             return result;
         }
         public class AnimationState : IExposable
@@ -47,8 +60,27 @@ namespace Shashlichnik
             private DrawDataExposable drawData;
             private int animationTick = 0;
 
-            public PawnRenderNode_Animated renderNode;
+            private PawnRenderNode_Animated renderNode;
+            public Pawn pawn;
             public KeyframeExtended currentKeyframe;
+            public string id;
+
+            public void Init(PawnRenderNode_Animated renderNode)
+            {
+                this.renderNode = renderNode;
+                this.pawn = renderNode.tree.pawn;
+                availableLinesIds.Clear();
+                availableLinesIds.AddRange(renderNode.Props.DefaultLinesFor(renderNode.tree.pawn).Select(renderNode.Props.LineId));
+                var line = CurrentLine;
+                if (line.tickOffset >= 0)
+                {
+                    AnimationTick = line.tickOffset % line.AnimationLength;
+                }
+                else
+                {
+                    AnimationTick = line.AnimationLength - (line.tickOffset % line.AnimationLength);
+                }
+            }
 
             public void ExposeData()
             {
@@ -57,6 +89,17 @@ namespace Shashlichnik
                 Scribe_Values.Look(ref currentLineId, nameof(currentLineId));
                 Scribe_Values.Look(ref animationTick, nameof(animationTick));
 
+            }
+            public PawnRenderNode_Animated RenderNode
+            {
+                get
+                {
+                    if (renderNode == null)
+                    {
+                        renderNode = pawn.Drawer.renderer.renderTree.rootNode.AllRenderNodes().OfType<PawnRenderNode_Animated>().FirstOrDefault(x => x.ID == id);
+                    }
+                    return renderNode;
+                }
             }
             public int AnimationTick
             {
@@ -74,7 +117,7 @@ namespace Shashlichnik
             {
                 get
                 {
-                    return availableLinesIds.Select(renderNode.Props.LineWithId);
+                    return availableLinesIds.Select(RenderNode.Props.LineWithId);
                 }
             }
             public KeyframeLine CurrentLine
@@ -88,7 +131,7 @@ namespace Shashlichnik
                             {
                                 currentLineId = availableLinesIds.RandomElement();
                             }
-                            currentLine = renderNode.Props.LineWithId(currentLineId);
+                            currentLine = RenderNode.Props.LineWithId(currentLineId);
                         }
                         return currentLine;
                     }
@@ -96,7 +139,7 @@ namespace Shashlichnik
                 set
                 {
                     currentLine = value;
-                    currentLineId = renderNode.Props.LineId(value);
+                    currentLineId = RenderNode.Props.LineId(value);
                 }
             }
             public KeyframeExtended CurrentKeyframe
@@ -113,14 +156,21 @@ namespace Shashlichnik
             }
             public void Tick()
             {
-                if (renderNode.tree.pawn.DeadOrDowned && !renderNode.tree.pawn.Crawling)
+                if (pawn.DeadOrDowned && !pawn.Crawling)
                 {
                     return;
                 }
                 AnimationTick++;
-                if (CurrentLine.AnimationLength < animationTick)
+                if (RenderNode == null)
                 {
-                    CurrentLine = null;
+                    return;
+                }
+                if (CurrentLine.AnimationLength <= animationTick)
+                {
+                    if (!RenderNode.Props.playOneLine)
+                    {
+                        CurrentLine = null;
+                    }
                     animationTick = animationTick % CurrentLine.AnimationLength;
                 }
             }

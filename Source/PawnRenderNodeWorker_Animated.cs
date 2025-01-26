@@ -22,9 +22,9 @@ namespace Shashlichnik
         {
             var result = base.OffsetFor(node, parms, out pivot);
 
-            if (node is PawnRenderNode_Animated animated && animated.CurrentLine.drawData != null)
+            if (node is PawnRenderNode_Animated animated && animated.AnimationState.CurrentLine.drawData != null)
             {
-                Vector3 vector2 = animated.CurrentLine.drawData.OffsetForRot(parms.facing);
+                Vector3 vector2 = animated.AnimationState.CurrentLine.drawData.OffsetForRot(parms.facing);
                 if (node.Props.drawData.scaleOffsetByBodySize && parms.pawn.story != null)
                 {
                     Vector2 bodyGraphicScale = parms.pawn.story.bodyType.bodyGraphicScale;
@@ -39,17 +39,17 @@ namespace Shashlichnik
         protected override Vector3 PivotFor(PawnRenderNode node, PawnDrawParms parms)
         {
             Vector3 vector = base.PivotFor(node, parms);
-            if (node is PawnRenderNode_Animated animated && animated.CurrentLine.drawData != null)
+            if (node is PawnRenderNode_Animated animated && animated.AnimationState.CurrentLine.drawData != null)
             {
-                vector -= (animated.CurrentLine.drawData.PivotForRot(parms.facing) - DrawData.PivotCenter).ToVector3();
+                vector -= (animated.AnimationState.CurrentLine.drawData.PivotForRot(parms.facing) - DrawData.PivotCenter).ToVector3();
             }
             return vector;
         }
         public override float LayerFor(PawnRenderNode node, PawnDrawParms parms)
         {
-            if (node is PawnRenderNode_Animated animated && animated.CurrentLine.drawData != null)
+            if (node is PawnRenderNode_Animated animated && animated.AnimationState.CurrentLine.drawData != null)
             {
-                var drawData = animated.CurrentLine.drawData;
+                var drawData = animated.AnimationState.CurrentLine.drawData;
                 var result = drawData.LayerForRot(parms.facing, -1000f) + node.debugLayerOffset;
                 if (result > -99f)
                 {
@@ -62,7 +62,7 @@ namespace Shashlichnik
         {
             var result = base.RotationFor(node, parms);
             DrawData drawData;
-            if (node is PawnRenderNode_Animated animated && (drawData = animated.CurrentLine.drawData) != null)
+            if (node is PawnRenderNode_Animated animated && (drawData = animated.AnimationState.CurrentLine.drawData) != null)
             {
                 result *= Quaternion.AngleAxis(drawData.RotationOffsetForRot(parms.facing), Vector3.up);
             }
@@ -72,7 +72,7 @@ namespace Shashlichnik
         {
             var result = base.ScaleFor(node, parms);
             DrawData drawData;
-            if (node is PawnRenderNode_Animated animated && (drawData = animated.CurrentLine.drawData) != null)
+            if (node is PawnRenderNode_Animated animated && (drawData = animated.AnimationState.CurrentLine.drawData) != null)
             {
                 result *= drawData.ScaleFor(parms.pawn);
             }

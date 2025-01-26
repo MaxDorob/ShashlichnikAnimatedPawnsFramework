@@ -48,7 +48,6 @@
     <Compile Include="PawnRenderNodeProperties_Animated.cs" />
     <Compile Include="PawnRenderNodeWorker_Animated.cs" />
     <Compile Include="PawnRenderNode_Animated.cs" />
-    <Compile Include="PawnRenderNode_Animated_Random.cs" />
     <Compile Include="PawnRenderSubWorker_AttachmentBody.cs" />
     <Compile Include="PawnRenderSubWorker_RotateByRot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
