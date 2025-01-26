@@ -15,7 +15,36 @@ namespace Shashlichnik
             workerClass = typeof(PawnRenderNodeWorker_Animated);
             nodeClass = typeof(PawnRenderNode_Animated);
         }
+        public KeyframeLine LineWithId(string id)
+        {
+            KeyframeLine result = keyframeLines.FirstOrDefault(x => x.id == id);
+            if (result != null)
+            {
+                return result;
+            }
+            if (int.TryParse(id, out var index) && keyframeLines.Count > index)
+            {
+                result = keyframeLines[index];
+            }
+            if (result == null)
+            {
+                Log.ErrorOnce($"Missing line with id: {id}", id.GetHashCode());
+            }
+            return result;
 
+        }
+        public string LineId(KeyframeLine line)
+        {
+            if (line == null || !keyframeLines.Contains(line))
+            {
+                return null;
+            }
+            if (!string.IsNullOrEmpty(line.id))
+            {
+                return line.id;
+            }
+            return keyframeLines.IndexOf(line).ToString();
+        }
         public override void ResolveReferences()
         {
             base.ResolveReferences();
@@ -28,9 +57,11 @@ namespace Shashlichnik
                 line.ResolveReferences();
             }
         }
-
+        public string id;
+        public string groupName;
         public class KeyframeLine
         {
+            public string id;
             public int tickOffset = 0;
             public int keyframesCount = 0;
             public int ticksPerAnimation = 3;

@@ -18,8 +18,6 @@ namespace Shashlichnik
         protected override void OnAnimationRestart()
         {
             base.OnAnimationRestart();
-            this.currentLine = Props.keyframeLines[random.Next(Props.keyframeLines.Count)];
-            animationLength = CurrentLine.AnimationLength;
         }
         protected override IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {

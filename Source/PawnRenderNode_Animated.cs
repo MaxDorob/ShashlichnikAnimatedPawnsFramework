@@ -7,99 +7,77 @@ using UnityEngine;
 using Verse;
 using static Shashlichnik.PawnRenderNodeProperties_Animated;
 using static Shashlichnik.PawnRenderNodeProperties_Animated.KeyframeLine;
-
+using AnimationState = Shashlichnik.AnimationComp.AnimationState;
 namespace Shashlichnik
 {
     public class PawnRenderNode_Animated : PawnRenderNode
     {
         public PawnRenderNode_Animated(Pawn pawn, PawnRenderNodeProperties props, PawnRenderTree tree) : base(pawn, props, tree)
         {
-            currentLine = KeyframeLinesFor(pawn).First();
-            pawnDead = pawn.Dead;
-            animationLength = CurrentLine.AnimationLength;
-            personalTickOffset = pawn.thingIDNumber.HashOffset() % animationLength;
-            animationStartedTick = tickManager.TicksAbs - Math.Abs(personalTickOffset) - CurrentLine.tickOffset;
+            
         }
-        bool pawnDead;
-        TickManager tickManager = Find.TickManager;
-        public int personalTickOffset;
         public new PawnRenderNodeProperties_Animated Props => props as PawnRenderNodeProperties_Animated;
-        public int animationLength;
-        public float debugTickOffset = 0;
-        public int CurrentAnimationTick => pawnDead ? 0 + CurrentLine.tickOffset : (tickManager.TicksAbs - AnimationStartedTick + (int)debugTickOffset) % animationLength;
         private KeyframeExtended currentKeyframe;
-        private int nextRecacheTick = 0;
-        int animationStartedTick;
-        protected KeyframeLine currentLine;
-        private KeyframeLine forcedLine;
-        public int AnimationStartedTick
-        {
-            get => animationStartedTick;
-            set
-            {
-                if (animationStartedTick != value)
-                {
-                    animationStartedTick = value;
-                    OnAnimationRestart();
-                }
-            }
-        }
+        private AnimationState animationState;
+
         public KeyframeExtended CurrentKeyframe
         {
             get
             {
-                var currentAnimationTick = CurrentAnimationTick;
-                var currentAbsTick = tickManager.TicksAbs;
-                AnimationStartedTick += ((currentAbsTick - (animationStartedTick)) / animationLength) * animationLength + (int)debugTickOffset;
-                if (currentKeyframe == null || (!pawnDead && currentAnimationTick >= nextRecacheTick))
-                {
-                    int count = CurrentLine.keyframes.Count;
-                    int i = 0;
-                    KeyframeExtended result = CurrentLine.keyframes[0];
-                    for (; i < count; i++)
-                    {
-                        var current = CurrentLine.keyframes[i];
-                        if (current.tick > currentAnimationTick)
-                        {
-                            break;
-                        }
-                        result = current;
-                    }
-                    var nextKeyframe = i < count - 1 ? CurrentLine.keyframes[i] : CurrentLine.keyframes[0];
-                    currentKeyframe = result;
-                    nextRecacheTick = nextKeyframe.tick;
-                    return result;
-                }
-                return currentKeyframe;
+                return AnimationState.CurrentKeyframe;
             }
-            internal set
+
+        }
+
+        public AnimationState AnimationState
+        {
+            get
             {
-                currentKeyframe = value;
-                nextRecacheTick = 0;
+                if (animationState == null)
+                {
+                    animationState = tree.pawn.GetComp<AnimationComp>().GetAnimationState(this);
+                }
+                return animationState;
             }
         }
 
-        public KeyframeLine ForcedLine
+
+        public string ID
         {
-            get => forcedLine;
-            set
+            get
             {
-                forcedLine = value;
-                AnimationStartedTick = tickManager.TicksAbs;
+
+                if (!string.IsNullOrWhiteSpace(Props.id))
+                {
+                    return Props.id;
+                }
+                if (hediff != null)
+                {
+                    return $"{hediff.loadID}_{(hediff.def as IRenderNodePropertiesParent).RenderNodeProperties.IndexOf(this.Props)}";
+                }
+                if (gene != null)
+                {
+                    return $"{gene.loadID}_{(gene.def as IRenderNodePropertiesParent).RenderNodeProperties.IndexOf(this.Props)}";
+                }
+                if (apparel != null)
+                {
+                    return $"{apparel.ThingID}_{apparel.def.apparel.RenderNodeProperties.IndexOf(this.Props)}";
+                }
+                if (trait != null)
+                {
+                    return $"{trait.def.defName}_{trait.CurrentData.RenderNodeProperties.IndexOf(this.Props)}";
+                }
+                Log.ErrorOnce($"No ID", this.GetHashCode());
+                return "";
             }
         }
-        public virtual KeyframeLine CurrentLine
-        {
-            get => ForcedLine ?? currentLine;
-        }
+
+        public string parentID => !string.IsNullOrWhiteSpace(Props.groupName) ? Props.groupName : (hediff?.loadID.ToString() ?? gene?.loadID.ToString() ?? apparel?.ThingID ?? this.trait?.def.defName);
         protected virtual IEnumerable<KeyframeLine> KeyframeLinesFor(Pawn pawn)
         {
-            if (forcedLine != null)
-            {
-                yield return forcedLine;
-            }
-            yield return Props.keyframeLines[Math.Abs(pawn.thingIDNumber.HashOffset() % Props.keyframeLines.Count)];
+            return AnimationState.AvailableLines;
         }
+        public KeyframeLine CurrentLine => AnimationState.CurrentLine;
         protected override IEnumerable<Graphic> GraphicsFor(Pawn pawn)
         {
             if (HasGraphic(pawn))
@@ -143,6 +121,23 @@ namespace Shashlichnik
             if (!string.IsNullOrWhiteSpace(props.debugLabel?.ToString()))
                 return props.debugLabel;
             return base.ToString();
+        }
+        public virtual AnimationState ToAnimationState()
+        {
+            var result = new AnimationState();
+            result.availableLinesIds.Clear();
+            var defaultLine = Props.keyframeLines[Math.Abs(this.tree.pawn.thingIDNumber.HashOffset() % Props.keyframeLines.Count)];
+            var id = !string.IsNullOrEmpty(defaultLine.id) ? defaultLine.id : Props.keyframeLines.IndexOf(defaultLine).ToString();
+            result.availableLinesIds.Add(id);
+            if (defaultLine.tickOffset >= 0)
+            {
+                result.AnimationTick = defaultLine.tickOffset % defaultLine.AnimationLength;
+            }
+            else
+            {
+                result.AnimationTick = defaultLine.AnimationLength - (defaultLine.tickOffset % defaultLine.AnimationLength);
+            }
+            return result;
         }
     }
 }

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationAdd">
+    <xpath>/Defs/ThingDef[defName="Human"]/comps</xpath>
+    <value>
+      <li>
+				<compClass>Shashlichnik.AnimationComp</compClass>
+			</li>
+    </value>
+  </Operation>
+  
+</Patch>
