@@ -331,9 +331,9 @@ namespace Shashlichnik
                     num
                 }));
                 rect2.y += rect2.height;
-                Widgets.HorizontalSlider(rect2, ref XOffset, OffsetRange, "X: " + previousXOffset, 0.05f);
+                Widgets.HorizontalSlider(rect2, ref XOffset, OffsetRange, "X: " + previousXOffset, 0.01f);
                 rect2.y += rect2.height;
-                Widgets.HorizontalSlider(rect2, ref YOffset, OffsetRange, "Z: " + previousYOffset, 0.05f);
+                Widgets.HorizontalSlider(rect2, ref YOffset, OffsetRange, "Z: " + previousYOffset, 0.01f);
                 rect2.y += rect2.height;
                 Widgets.HorizontalSlider(rect2, ref layer, LayerRange, "Layer: " + previousLayer, 1f);
                 rect2.y += rect2.height;
@@ -349,16 +349,7 @@ namespace Shashlichnik
                 //rect2.y += rect2.height;
 
 
-                if ((CurrentNode.debugAngleOffset != 0f || CurrentNode.debugScale != 1f || CurrentNode.debugOffset != Vector3.zero || CurrentNode.debugLayerOffset != 0f || !CurrentNode.debugEnabled || CurrentNode.debugPivotOffset != DrawData.PivotCenter) && Widgets.ButtonText(new Rect(0f, inRect.height - 25f, inRect.width, 25f), "Reset", true, true, true, null))
-                {
-                    CurrentNode.debugAngleOffset = 0f;
-                    CurrentNode.debugScale = 1f;
-                    CurrentNode.debugOffset = Vector3.zero;
-                    CurrentNode.debugLayerOffset = 0f;
-                    CurrentNode.debugEnabled = true;
-                    CurrentNode.requestRecache = true;
-                    CurrentNode.debugPivotOffset = DrawData.PivotCenter;
-                }
+               
                 foreach (var toChange in NodesToChange)
                 {
                     toChange.requestRecache = true;
@@ -386,6 +377,13 @@ namespace Shashlichnik
                     {
                         toChange.AnimationState.drawData ??= new DrawDataExposable();
                         toChange.AnimationState.drawData.scale = scale;
+                    }
+                }
+                if (CurrentNode.AnimationState.drawData != null && Widgets.ButtonText(new Rect(0f, inRect.height - 25f, inRect.width, 25f), "Reset", true, true, true, null))
+                {
+                    foreach (var nodeToChange in NodesToChange)
+                    {
+                        nodeToChange.AnimationState.drawData = null;
                     }
                 }
                 CurrentNode.tree.pawn.Drawer.renderer.EnsureGraphicsInitialized();
@@ -571,10 +569,10 @@ namespace Shashlichnik
         private static readonly FloatRange AngleRange = new FloatRange(-180f, 180f);
 
         // Token: 0x04005A93 RID: 23187
-        private static readonly FloatRange ScaleRange = new FloatRange(0.01f, 10f);
+        private static readonly FloatRange ScaleRange = new FloatRange(0.01f, 2f);
 
         // Token: 0x04005A94 RID: 23188
-        private static readonly FloatRange OffsetRange = new FloatRange(-1f, 1f);
+        private static readonly FloatRange OffsetRange = new FloatRange(-0.5f, 0.5f);
 
         // Token: 0x04005A95 RID: 23189
         private static readonly FloatRange LayerRange = new FloatRange(-50f, 100f);
