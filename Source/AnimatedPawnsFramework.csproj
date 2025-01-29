@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimationComp.cs" />
+    <Compile Include="Dialog_AnimationSettings.cs" />
     <Compile Include="DrawDataExposable.cs" />
     <Compile Include="Layers_Patch.cs" />
     <Compile Include="PawnRenderNodeProperties_Animated.cs" />

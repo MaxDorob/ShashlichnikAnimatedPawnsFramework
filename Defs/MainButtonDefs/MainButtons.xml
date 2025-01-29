@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <MainButtonDef>
+    <defName>ShashlichnikAnimations</defName>
+    <label>shashlichnik animations</label>
+    <description>Change animations.</description>
+    <tabWindowClass>Shashlichnik.Dialog_AnimationSettings</tabWindowClass>
+    <order>120</order>
+    <validWithoutMap>false</validWithoutMap>
+    <minimized>True</minimized>
+    <iconPath>UI/Buttons/MainButtons/Ideoligions</iconPath>
+  </MainButtonDef>
+
+</Defs>
