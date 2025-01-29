@@ -24,92 +24,64 @@ namespace Shashlichnik
             {
                 case 0:
                     {
-                        Vector3? vector = (this.dataNorth != null) ? this.dataNorth.GetValueOrDefault().offset : null;
+                        Vector3? vector = (this.dataNorth != null) ? this.dataNorth.offset : null;
                         if (vector != null)
                         {
                             return vector.GetValueOrDefault();
                         }
-                        Vector3? offset = this.defaultData.offset;
-                        if (offset == null)
-                        {
-                            return Vector3.zero;
-                        }
-                        return offset.GetValueOrDefault();
+                        return Vector3.zero;
+
                     }
                 case 1:
                     {
-                        Vector3? vector2 = (this.dataEast != null) ? this.dataEast.GetValueOrDefault().offset : null;
+                        Vector3? vector2 = (this.dataEast != null) ? this.dataEast.offset : null;
                         if (vector2 != null)
                         {
                             return vector2.Value;
                         }
-                        Vector3? vector3 = (this.dataWest != null) ? this.dataWest.GetValueOrDefault().offset : null;
+                        Vector3? vector3 = (this.dataWest != null) ? this.dataWest.offset : null;
                         if (vector3 != null)
                         {
                             Vector3 value = vector3.Value;
                             value.x *= -1f;
                             return value;
                         }
-                        Vector3? offset2 = this.defaultData.offset;
-                        if (offset2 != null)
-                        {
-                            return offset2.Value;
-                        }
                         return Vector3.zero;
                     }
                 case 2:
                     {
-                        Vector3? vector = (this.dataSouth != null) ? this.dataSouth.GetValueOrDefault().offset : null;
+                        Vector3? vector = (this.dataSouth != null) ? this.dataSouth.offset : null;
                         if (vector != null)
                         {
                             return vector.GetValueOrDefault();
                         }
-                        Vector3? offset = this.defaultData.offset;
-                        if (offset == null)
-                        {
-                            return Vector3.zero;
-                        }
-                        return offset.GetValueOrDefault();
+                        return Vector3.zero;
+
                     }
                 case 3:
                     {
-                        Vector3? vector4 = (this.dataWest != null) ? this.dataWest.GetValueOrDefault().offset : null;
+                        Vector3? vector4 = (this.dataWest != null) ? this.dataWest.offset : null;
                         if (vector4 != null)
                         {
                             return vector4.Value;
                         }
-                        Vector3? vector5 = (this.dataEast != null) ? this.dataEast.GetValueOrDefault().offset : null;
+                        Vector3? vector5 = (this.dataEast != null) ? this.dataEast.offset : null;
                         if (vector5 != null)
                         {
                             Vector3 value2 = vector5.Value;
                             value2.x *= -1f;
                             return value2;
                         }
-                        Vector3? offset3 = this.defaultData.offset;
-                        if (offset3 != null)
-                        {
-                            return offset3.Value;
-                        }
-                        Vector3? vector = (this.dataWest != null) ? this.dataWest.GetValueOrDefault().offset : null;
+                        Vector3? vector = (this.dataWest != null) ? this.dataWest.offset : null;
                         if (vector != null)
                         {
                             return vector.GetValueOrDefault();
                         }
-                        Vector3? offset = this.defaultData.offset;
-                        if (offset == null)
-                        {
-                            return Vector3.zero;
-                        }
-                        return offset.GetValueOrDefault();
+                        return Vector3.zero;
                     }
                 default:
                     {
-                        Vector3? vector = this.defaultData.offset;
-                        if (vector == null)
-                        {
-                            return Vector3.zero;
-                        }
-                        return vector.GetValueOrDefault();
+                        return Vector3.zero;
                     }
             }
         }
@@ -120,68 +92,43 @@ namespace Shashlichnik
             {
                 case 0:
                     {
-                        float? num = (this.dataNorth != null) ? this.dataNorth.GetValueOrDefault().rotationOffset : null;
+                        float? num = (this.dataNorth != null) ? this.dataNorth.rotationOffset : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? rotationOffset = this.defaultData.rotationOffset;
-                        if (rotationOffset == null)
-                        {
-                            return 0f;
-                        }
-                        return rotationOffset.GetValueOrDefault();
+                        return 0f;
                     }
                 case 1:
                     {
-                        float? num = (this.dataEast != null) ? this.dataEast.GetValueOrDefault().rotationOffset : null;
+                        float? num = (this.dataEast != null) ? this.dataEast.rotationOffset : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? rotationOffset = this.defaultData.rotationOffset;
-                        if (rotationOffset == null)
-                        {
-                            return 0f;
-                        }
-                        return rotationOffset.GetValueOrDefault();
+                        return 0f;
                     }
                 case 2:
                     {
-                        float? num = (this.dataSouth != null) ? this.dataSouth.GetValueOrDefault().rotationOffset : null;
+                        float? num = (this.dataSouth != null) ? this.dataSouth.rotationOffset : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? rotationOffset = this.defaultData.rotationOffset;
-                        if (rotationOffset == null)
-                        {
-                            return 0f;
-                        }
-                        return rotationOffset.GetValueOrDefault();
+                        return 0f;
                     }
                 case 3:
                     {
-                        float? num = (this.dataWest != null) ? this.dataWest.GetValueOrDefault().rotationOffset : null;
+                        float? num = (this.dataWest != null) ? this.dataWest.rotationOffset : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? rotationOffset = this.defaultData.rotationOffset;
-                        if (rotationOffset == null)
-                        {
-                            return 0f;
-                        }
-                        return rotationOffset.GetValueOrDefault();
+                        return 0f;
                     }
                 default:
                     {
-                        float? num = this.defaultData.rotationOffset;
-                        if (num == null)
-                        {
-                            return 0f;
-                        }
-                        return num.GetValueOrDefault();
+                        return 0f;
                     }
             }
         }
@@ -192,68 +139,43 @@ namespace Shashlichnik
             {
                 case 0:
                     {
-                        float? num = (this.dataNorth != null) ? this.dataNorth.GetValueOrDefault().layer : null;
+                        float? num = (this.dataNorth != null) ? this.dataNorth.layer : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? layer = this.defaultData.layer;
-                        if (layer == null)
-                        {
-                            return defaultLayer;
-                        }
-                        return layer.GetValueOrDefault();
+                        return defaultLayer;
                     }
                 case 1:
                     {
-                        float? num = (this.dataEast != null) ? this.dataEast.GetValueOrDefault().layer : null;
+                        float? num = (this.dataEast != null) ? this.dataEast.layer : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? layer = this.defaultData.layer;
-                        if (layer == null)
-                        {
-                            return defaultLayer;
-                        }
-                        return layer.GetValueOrDefault();
+                        return defaultLayer;
                     }
                 case 2:
                     {
-                        float? num = (this.dataSouth != null) ? this.dataSouth.GetValueOrDefault().layer : null;
+                        float? num = (this.dataSouth != null) ? this.dataSouth.layer : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? layer = this.defaultData.layer;
-                        if (layer == null)
-                        {
-                            return defaultLayer;
-                        }
-                        return layer.GetValueOrDefault();
+                        return defaultLayer;
                     }
                 case 3:
                     {
-                        float? num = (this.dataWest != null) ? this.dataWest.GetValueOrDefault().layer : null;
+                        float? num = (this.dataWest != null) ? this.dataWest.layer : null;
                         if (num != null)
                         {
                             return num.GetValueOrDefault();
                         }
-                        float? layer = this.defaultData.layer;
-                        if (layer == null)
-                        {
-                            return defaultLayer;
-                        }
-                        return layer.GetValueOrDefault();
+                        return defaultLayer;
                     }
                 default:
                     {
-                        float? num = this.defaultData.layer;
-                        if (num == null)
-                        {
-                            return defaultLayer;
-                        }
-                        return num.GetValueOrDefault();
+                        return defaultLayer;
                     }
             }
         }
@@ -265,23 +187,23 @@ namespace Shashlichnik
             {
                 if (value.rotation == null)
                 {
-                    drawData.defaultData = value;
+                    
                 }
                 else
                 {
                     switch (value.rotation.Value.AsInt)
                     {
                         case 0:
-                            drawData.dataNorth = new RotationalData?(value);
+                            drawData.dataNorth = value;
                             break;
                         case 1:
-                            drawData.dataEast = new RotationalData?(value);
+                            drawData.dataEast = value;
                             break;
                         case 2:
-                            drawData.dataSouth = new RotationalData?(value);
+                            drawData.dataSouth = value;
                             break;
                         case 3:
-                            drawData.dataWest = new RotationalData?(value);
+                            drawData.dataWest = value;
                             break;
                     }
                 }
@@ -291,34 +213,103 @@ namespace Shashlichnik
 
         public void ExposeData()
         {
-            Scribe_Deep.Look(ref defaultData, nameof(defaultData));
             Scribe_Deep.Look(ref dataNorth, nameof(dataNorth));
             Scribe_Deep.Look(ref dataEast, nameof(dataEast));
             Scribe_Deep.Look(ref dataSouth, nameof(dataSouth));
             Scribe_Deep.Look(ref dataWest, nameof(dataWest));
             Scribe_Values.Look(ref scale, nameof(scale));
         }
+        public RotationalData RotationalDataFor(Rot4 rot, bool createIfNull = true)
+        {
+            switch (rot.AsInt)
+            {
+                case 0:
+                    if (createIfNull && dataNorth == null)
+                    {
+                        dataNorth = new RotationalData(rot, null);
+                    }
+                    return dataNorth;
+                case 1:
+                    if (createIfNull && dataEast == null)
+                    {
+                        dataEast = new RotationalData(rot, null);
+                    }
+                    return dataEast;
+                case 2:
+                    if (createIfNull && dataSouth == null)
+                    {
+                        dataSouth = new RotationalData(rot, null);
+                    }
+                    return dataSouth;
+                case 3:
+                    if (createIfNull && dataWest == null)
+                    {
+                        dataWest = new RotationalData(rot, null);
+                    }
+                    return dataWest;
+                default:
+                    return null;
+            }
+        }
+        public void SetXOffsetFor(Rot4 rot, float offset)
+        {
+            var drawData = RotationalDataFor(rot);
+            var v = new Vector3(offset, 0, 0);
+            if (drawData.offset == null)
+            {
+                drawData.offset = v;
+            }
+            else
+            {
+                drawData.offset = new Vector3(offset, drawData.offset.Value.y, drawData.offset.Value.z);
+            }
+        }
+        public void SetYOffsetFor(Rot4 rot, float offset)
+        {
+            var drawData = RotationalDataFor(rot);
+            var v = new Vector3(0, 0, offset);
+            if (drawData.offset == null)
+            {
+                drawData.offset = v;
+            }
+            else
+            {
+                drawData.offset = new Vector3(drawData.offset.Value.x, drawData.offset.Value.y, offset);
+            }
+        }
+        public void SetRotationFor(Rot4 rot, float offset)
+        {
+            var drawData = RotationalDataFor(rot);
+            drawData.rotationOffset = offset;
+        }
 
-        private RotationalData defaultData;
+        public void SetLayerFor(Rot4 rot, float layer)
+        {
+            var drawData = RotationalDataFor(rot);
+            drawData.layer = layer;
+        }
 
-        private RotationalData? dataNorth;
+        internal RotationalData dataNorth;
 
-        private RotationalData? dataEast;
+        internal RotationalData dataEast;
 
-        private RotationalData? dataSouth;
+        internal RotationalData dataSouth;
 
-        private RotationalData? dataWest;
+        internal RotationalData dataWest;
 
         public float scale = 1f;
 
 
-        public struct RotationalData : IExposable
+        public class RotationalData : IExposable
         {
-            public RotationalData(Rot4? rotation, float layer)
+            public RotationalData()
             {
-                this = default(RotationalData);
+
+            }
+            public RotationalData(Rot4? rotation, float? layer = null)
+            {
                 this.rotation = rotation;
-                this.layer = new float?(layer);
+                this.layer = layer;
                 this.offset = null;
                 this.rotationOffset = null;
             }
