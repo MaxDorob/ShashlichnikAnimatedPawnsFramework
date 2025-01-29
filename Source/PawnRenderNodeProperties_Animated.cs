@@ -16,14 +16,6 @@ namespace Shashlichnik
         public KeyframeLine LineWithId(string id)
         {
             KeyframeLine result = keyframeLines.FirstOrDefault(x => x.id == id);
-            if (result != null)
-            {
-                return result;
-            }
-            if (int.TryParse(id, out var index) && keyframeLines.Count > index)
-            {
-                result = keyframeLines[index];
-            }
             if (result == null)
             {
                 Log.ErrorOnce($"Missing line with id: {id}", id.GetHashCode());
@@ -37,15 +29,11 @@ namespace Shashlichnik
             {
                 return null;
             }
-            if (!string.IsNullOrEmpty(line.id))
-            {
-                return line.id;
-            }
-            return keyframeLines.IndexOf(line).ToString();
+            return line.id;
         }
         internal IEnumerable<KeyframeLine> DefaultLinesFor(Pawn pawn)
         {
-            if (playOneLine)
+            if (!playOneLine)
             {
                 foreach (KeyframeLine line in keyframeLines)
                 {
@@ -64,9 +52,15 @@ namespace Shashlichnik
             {
                 Log.Error($"No keyframe lines");
             }
-            foreach (KeyframeLine line in keyframeLines)
+            for (int i = 0; i < keyframeLines.Count; i++)
             {
+                KeyframeLine line = keyframeLines[i];
                 line.ResolveReferences();
+                if (string.IsNullOrEmpty(line.id))
+                {
+                    line.id = (i + 1).ToString();
+                }
+
             }
         }
         public string id;
