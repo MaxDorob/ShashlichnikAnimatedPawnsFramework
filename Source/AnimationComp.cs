@@ -1,6 +1,8 @@
-﻿using System;
+﻿using RimWorld.Planet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
@@ -13,29 +15,43 @@ namespace Shashlichnik
 {
     public class AnimationComp : ThingComp
     {
-        private Dictionary<string, AnimationState> animationStates = new System.Collections.Generic.Dictionary<string, AnimationState>();
+        private List<AnimationState> animationStates = new List<AnimationState>();
         public override void PostExposeData()
         {
             base.PostExposeData();
             Scribe_Collections.Look(ref animationStates, nameof(animationStates));
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-
                 foreach (var state in animationStates)
                 {
-                    state.Value.pawn = parent as Pawn;
-                    state.Value.id = state.Key;
+                    state.PostLoad(parent as Pawn);
                 }
             }
         }
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
+            var pawn = parent as Pawn;
+            if (!pawn.IsWorldPawn())
+            {
+                foreach (var state in animationStates.ToList())
+                {
+                    if (string.IsNullOrEmpty(state.id) || (pawn.Drawer.renderer.renderTree.Resolved && state.RenderNode == null))
+                    {
+                        animationStates.Remove(state);
+                    }
+                }
+            }
         }
         public override void CompTick()
         {
             base.CompTick();
-            foreach (var animationState in animationStates.Values)
+            var pawn = parent as Pawn;
+            if (pawn.Map == null || (pawn.DeadOrDowned && !pawn.Crawling))
+            {
+                return;
+            }
+            foreach (var animationState in animationStates)
             {
                 animationState.Tick();
             }
@@ -44,11 +60,11 @@ namespace Shashlichnik
         public AnimationState GetAnimationState(PawnRenderNode_Animated renderNode)
         {
             var id = renderNode.ID;
-            if (!animationStates.TryGetValue(id, out var result))
+            var result = animationStates.FirstOrDefault(x => x.id == renderNode.ID);
+            if (result == null)
             {
-                result = new AnimationState();
-                result.Init(renderNode);
-                animationStates.Add(id, result);
+                result = new AnimationState(renderNode);
+                animationStates.Add(result);
             }
             return result;
         }
@@ -64,8 +80,8 @@ namespace Shashlichnik
             public Pawn pawn;
             public KeyframeExtended currentKeyframe;
             public string id;
-
-            public void Init(PawnRenderNode_Animated renderNode)
+            public AnimationState() { }
+            public AnimationState(PawnRenderNode_Animated renderNode)
             {
                 this.renderNode = renderNode;
                 this.pawn = renderNode.tree.pawn;
@@ -89,11 +105,16 @@ namespace Shashlichnik
 
             public void ExposeData()
             {
+                Scribe_Values.Look(ref id, nameof(id));
                 Scribe_Deep.Look(ref drawData, nameof(drawData));
                 Scribe_Collections.Look(ref availableLinesIds, nameof(availableLinesIds));
                 Scribe_Values.Look(ref currentLineId, nameof(currentLineId));
                 Scribe_Values.Look(ref animationTick, nameof(animationTick));
 
+            }
+            public void PostLoad(Pawn pawn)
+            {
+                this.pawn = pawn;
             }
             public PawnRenderNode_Animated RenderNode
             {
@@ -114,19 +135,26 @@ namespace Shashlichnik
                 }
                 set
                 {
-                    if (value >= CurrentLine.AnimationLength)
+                    var currentLine = this.CurrentLine;
+                    var animationLength = CurrentLine.AnimationLength;
+                    if (value >= animationLength)
                     {
-                        animationTick = value % CurrentLine.AnimationLength;
+                        if (!RenderNode.Props.playOneLine)
+                        {
+                            CurrentLine = null;
+                        }
+                        animationTick = value % animationLength;
                     }
                     else if (value < 0)
                     {
-                        animationTick = CurrentLine.AnimationLength + value;
+                        animationTick = animationLength + (value % animationLength);
                     }
                     else
                     {
                         animationTick = value;
                     }
                     currentKeyframe = null;
+
                 }
             }
             public IEnumerable<KeyframeLine> AvailableLines
@@ -156,7 +184,14 @@ namespace Shashlichnik
                 {
                     animationTick = 0;
                     currentLine = value;
-                    currentLineId = RenderNode.Props.LineId(value);
+                    if (value != null)
+                    {
+                        currentLineId = RenderNode.Props.LineId(value);
+                    }
+                    else
+                    {
+                        currentLineId = null;
+                    }
                 }
             }
             public KeyframeExtended CurrentKeyframe
@@ -181,23 +216,9 @@ namespace Shashlichnik
             }
             public void Tick()
             {
-                if (pawn.DeadOrDowned && !pawn.Crawling)
-                {
-                    return;
-                }
+
                 AnimationTick++;
-                if (RenderNode == null)
-                {
-                    return;
-                }
-                if (CurrentLine.AnimationLength <= animationTick)
-                {
-                    animationTick = animationTick % CurrentLine.AnimationLength;
-                    if (!RenderNode.Props.playOneLine)
-                    {
-                        CurrentLine = null;
-                    }
-                }
+
             }
         }
     }
