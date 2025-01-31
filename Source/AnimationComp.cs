@@ -53,13 +53,14 @@ namespace Shashlichnik
                 return;
             }
             var pawn = parent as Pawn;
-            if (pawn.Map == null || (pawn.DeadOrDowned && !pawn.Crawling))
+            if (pawn.Map == null || ticks > maxTicks || (pawn.DeadOrDowned && !pawn.Crawling))
             {
                 return;
             }
             ticks = Math.Max(ticks + 1, 0);
         }
         int ticks = 0;
+        const int maxTicks = 100000;
 
         public void UpdateStatesIfNeeded()
         {
