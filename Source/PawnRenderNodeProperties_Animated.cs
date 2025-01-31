@@ -58,7 +58,7 @@ namespace Shashlichnik
                 line.ResolveReferences();
                 if (string.IsNullOrEmpty(line.id))
                 {
-                    line.id = (i + 1).ToString();
+                    line.id = $"Animation {i + 1}";
                 }
 
             }
