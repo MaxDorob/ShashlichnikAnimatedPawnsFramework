@@ -251,6 +251,7 @@ namespace Shashlichnik
 
                             foreach (var nodeToChange in NodesToChange)
                             {
+                                nodeToChange.requestRecache = true;
                                 if (playOneLine)
                                 {
                                     nodeToChange.AnimationState.availableLinesIds.Clear();
