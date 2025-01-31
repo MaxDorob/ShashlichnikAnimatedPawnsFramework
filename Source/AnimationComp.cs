@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 using Verse;
 using static HarmonyLib.Code;
 using static Shashlichnik.PawnRenderNodeProperties_Animated;
@@ -20,6 +21,7 @@ namespace Shashlichnik
         {
             base.PostExposeData();
             Scribe_Collections.Look(ref animationStates, nameof(animationStates));
+            Scribe_Values.Look(ref ticks, nameof(ticks));
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 foreach (var state in animationStates)
@@ -46,14 +48,28 @@ namespace Shashlichnik
         public override void CompTick()
         {
             base.CompTick();
+            if (animationStates.NullOrEmpty())
+            {
+                return;
+            }
             var pawn = parent as Pawn;
             if (pawn.Map == null || (pawn.DeadOrDowned && !pawn.Crawling))
             {
                 return;
             }
-            foreach (var animationState in animationStates)
+            ticks = Math.Max(ticks + 1, 0);
+        }
+        int ticks = 0;
+
+        public void UpdateStatesIfNeeded()
+        {
+            if (ticks > 0)
             {
-                animationState.Tick();
+                foreach (var animationState in animationStates)
+                {
+                    animationState.Tick(ticks);
+                }
+                ticks = 0;
             }
         }
 
@@ -74,6 +90,7 @@ namespace Shashlichnik
             private string currentLineId = null;
             private KeyframeLine currentLine;
             public DrawDataExposable drawData;
+            private AnimationComp parent;
             private int animationTick = 0;
 
             private PawnRenderNode_Animated renderNode;
@@ -84,7 +101,7 @@ namespace Shashlichnik
             public AnimationState(PawnRenderNode_Animated renderNode)
             {
                 this.renderNode = renderNode;
-                this.pawn = renderNode.tree.pawn;
+                PostLoad(renderNode.tree.pawn);
                 availableLinesIds.Clear();
                 availableLinesIds.AddRange(renderNode.Props.DefaultLinesFor(renderNode.tree.pawn).Select(renderNode.Props.LineId));
                 SetInitialAnimationTick();
@@ -115,6 +132,7 @@ namespace Shashlichnik
             public void PostLoad(Pawn pawn)
             {
                 this.pawn = pawn;
+                parent = pawn.GetComp<AnimationComp>();
             }
             public PawnRenderNode_Animated RenderNode
             {
@@ -142,6 +160,7 @@ namespace Shashlichnik
                         if (!RenderNode.Props.playOneLine)
                         {
                             CurrentLine = null;
+                            animationLength = CurrentLine.AnimationLength;
                         }
                         animationTick = value % animationLength;
                     }
@@ -198,6 +217,7 @@ namespace Shashlichnik
             {
                 get
                 {
+                    parent.UpdateStatesIfNeeded();
                     if (currentKeyframe == null)
                     {
                         for (int i = CurrentLine.keyframes.Count - 1; i >= 0; i--)
@@ -214,11 +234,9 @@ namespace Shashlichnik
 
                 }
             }
-            public void Tick()
+            public void Tick(int ticksAmount)
             {
-
-                AnimationTick++;
-
+                AnimationTick += ticksAmount;
             }
         }
     }
