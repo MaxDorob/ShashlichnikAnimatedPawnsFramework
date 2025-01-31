@@ -113,6 +113,7 @@ namespace Shashlichnik
             public AnimationState(PawnRenderNode_Animated renderNode)
             {
                 this.renderNode = renderNode;
+                id = renderNode.ID;
                 PostLoad(renderNode.tree.pawn);
                 availableLinesIds.Clear();
                 availableLinesIds.AddRange(renderNode.Props.DefaultLinesFor(renderNode.tree.pawn).Select(renderNode.Props.LineId));
