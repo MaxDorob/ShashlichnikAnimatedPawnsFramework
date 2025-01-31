@@ -154,44 +154,11 @@ namespace Shashlichnik
             }
             Widgets.DrawMenuSection(inRect);
             inRect = inRect.ContractedBy(this.Margin / 2f);
-            Widgets.HorizontalSlider(new Rect(inRect.x + this.Margin, inRect.y, inRect.width - this.Margin * 2f, 25f), ref this.alpha, FloatRange.ZeroToOne, "Alpha " + this.alpha.ToStringPercent(), 0.01f);
-            this.pawn.Drawer.renderer.renderTree.debugTint = new Color?(Color.white.ToTransparent(this.alpha));
             inRect.yMin += 25f + this.Margin;
-            Rect rect = new Rect(inRect.x + this.Margin, inRect.y, "Animation".GetWidthCached() + 4f, 25f);
+            Rect rect = new Rect(inRect.x + this.Margin, inRect.y, "Render nodes".GetWidthCached() + 4f, 25f);
             using (new TextBlock(GameFont.Tiny, TextAnchor.MiddleLeft))
             {
-                Widgets.Label(rect, "Animation");
-            }
-            Rect rect2 = new Rect(rect.xMax + 4f, rect.y, inRect.width - rect.width - this.Margin * 2f, 25f);
-            Widgets.DrawLightHighlight(rect2);
-            Widgets.DrawHighlightIfMouseover(rect2);
-            using (new TextBlock(TextAnchor.MiddleCenter))
-            {
-                Widgets.Label(rect2, (this.currentAnimation == null) ? "None" : this.currentAnimation.defName);
-            }
-            if (Widgets.ButtonInvisible(rect2, true))
-            {
-                List<FloatMenuOption> list = new List<FloatMenuOption>();
-                list.Add(new FloatMenuOption("None", delegate ()
-                {
-                    this.currentAnimation = null;
-                    this.pawn.Drawer.renderer.SetAnimation(null);
-                }, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
-                foreach (AnimationDef animationDef in DefDatabase<AnimationDef>.AllDefsListForReading)
-                {
-                    AnimationDef def = animationDef;
-                    list.Add(new FloatMenuOption(animationDef.defName, delegate ()
-                    {
-                        this.currentAnimation = def;
-                        this.pawn.Drawer.renderer.SetAnimation(def);
-                    }, MenuOptionPriority.Default, null, null, 0f, null, null, true, 0));
-                }
-                Find.WindowStack.Add(new FloatMenu(list));
-            }
-            inRect.yMin += 25f + this.Margin;
-            using (new TextBlock(GameFont.Tiny))
-            {
-                Widgets.CheckboxLabeled(new Rect(inRect.x + this.Margin, inRect.y, inRect.width - this.Margin * 2f, 25f), "Show all nodes", ref this.showAll, false, null, null, false, false);
+                Widgets.Label(rect, "Render nodes");
             }
             inRect.yMin += 25f + this.Margin;
             Widgets.BeginScrollView(inRect, ref this.scrollPosition, new Rect(0f, 0f, inRect.width - 16f, this.scrollHeight), true);
@@ -208,11 +175,16 @@ namespace Shashlichnik
         }
 
         private float previousXOffset, previousYOffset, previousLayer, previousRotation, previousScale;
+        private float rightRectScrollHeight = 0;
+        private Vector2 rightRectScrollPosition;
         private void RightRect(Rect inRect)
         {
 
 
             Widgets.DrawMenuSection(inRect);
+            var viewRect = new Rect(inRect.x, inRect.y, inRect.width - Margin * 2, rightRectScrollHeight);
+            Widgets.BeginScrollView(inRect, ref rightRectScrollPosition, viewRect);
+            inRect = viewRect;
             inRect = inRect.ContractedBy(Margin / 2f);
             Widgets.BeginGroup(inRect);
             Rect rect = new Rect(0f, 0f, inRect.width, Text.LineHeight);
@@ -237,7 +209,10 @@ namespace Shashlichnik
                         nodeToChange.AnimationState.AnimationTick--;
                     }
                 }
-                Widgets.Label(rect2.RightHalf().ExpandedBy(6, 0).ContractedBy(0, 4), CurrentNode.AnimationState.AnimationTick.ToString());
+                using (new TextBlock(TextAnchor.MiddleCenter))
+                {
+                    Widgets.Label(rect2, CurrentNode.AnimationState.AnimationTick.ToString());
+                }
                 if (Widgets.ButtonText(rect2.RightPart(1f / 3f), ">"))
                 {
                     foreach (var nodeToChange in NodesToChange)
@@ -320,9 +295,9 @@ namespace Shashlichnik
                 float num = CurrentNode.Props.baseLayer;
                 if (CurrentNode.Props.drawData != null)
                 {
-                    num = CurrentNode.Props.drawData.LayerForRot(drawParms.facing, num);
+                    num = CurrentNode.Props.drawData.LayerForRot(CurrentRot, num);
                 }
-                num += CurrentNode.debugLayerOffset;
+                num = CurrentNode.AnimationState.drawData.LayerForRot(CurrentRot, num);
                 Widgets.Label(rect2, string.Concat(new object[]
                 {
                     "Offset ",
@@ -349,7 +324,7 @@ namespace Shashlichnik
                 //rect2.y += rect2.height;
 
 
-               
+
                 foreach (var toChange in NodesToChange)
                 {
                     toChange.requestRecache = true;
@@ -379,7 +354,8 @@ namespace Shashlichnik
                         toChange.AnimationState.drawData.scale = scale;
                     }
                 }
-                if (CurrentNode.AnimationState.drawData != null && Widgets.ButtonText(new Rect(0f, inRect.height - 25f, inRect.width, 25f), "Reset", true, true, true, null))
+                rect2.y += Margin;
+                if (CurrentNode.AnimationState.drawData != null && Widgets.ButtonText(rect2, "Reset", true, true, true, null))
                 {
                     foreach (var nodeToChange in NodesToChange)
                     {
@@ -397,7 +373,12 @@ namespace Shashlichnik
                     Widgets.Label(rect, "No node selected");
                 }
             }
+            if (Event.current.type == EventType.Layout)
+            {
+                this.rightRectScrollHeight = rect2.yMax + Margin;
+            }
             Widgets.EndGroup();
+            Widgets.EndScrollView();
         }
 
         private IEnumerable<Widgets.DropdownMenuElement<Rot4>> RotMenuGenerator(object arg)
