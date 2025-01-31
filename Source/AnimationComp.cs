@@ -92,11 +92,22 @@ namespace Shashlichnik
             public DrawDataExposable drawData;
             private AnimationComp parent;
             private int animationTick = 0;
+            private int recacheTick;
 
             private PawnRenderNode_Animated renderNode;
             public Pawn pawn;
             public KeyframeExtended currentKeyframe;
+            private int RecacheTick
+            {
+                get => recacheTick;
+                set
+                {
+                    currentKeyframe = null;
+                    recacheTick = value;
+                }
+            }
             public string id;
+
             public AnimationState() { }
             public AnimationState(PawnRenderNode_Animated renderNode)
             {
@@ -163,16 +174,21 @@ namespace Shashlichnik
                             animationLength = CurrentLine.AnimationLength;
                         }
                         animationTick = value % animationLength;
+                        currentKeyframe = null;
                     }
                     else if (value < 0)
                     {
                         animationTick = animationLength + (value % animationLength);
+                        currentKeyframe = null;
                     }
                     else
                     {
                         animationTick = value;
+                        if (value >= RecacheTick)
+                        {
+                            currentKeyframe = null;
+                        }
                     }
-                    currentKeyframe = null;
 
                 }
             }
@@ -220,14 +236,18 @@ namespace Shashlichnik
                     parent.UpdateStatesIfNeeded();
                     if (currentKeyframe == null)
                     {
-                        for (int i = CurrentLine.keyframes.Count - 1; i >= 0; i--)
+                        var currentLine = CurrentLine;
+                        var recacheTick = 0;
+                        for (int i = currentLine.keyframes.Count - 1; i >= 0; i--)
                         {
-                            var keyframe = CurrentLine.keyframes[i];
+                            var keyframe = currentLine.keyframes[i];
                             if (i == 0 || keyframe.tick <= animationTick)
                             {
+                                this.RecacheTick = recacheTick;
                                 currentKeyframe = keyframe;
                                 break;
                             }
+                            recacheTick = keyframe.tick;
                         }
                     }
                     return currentKeyframe;
