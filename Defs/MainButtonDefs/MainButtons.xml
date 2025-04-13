@@ -3,13 +3,13 @@
 
   <MainButtonDef>
     <defName>ShashlichnikAnimations</defName>
-    <label>shashlichnik animations</label>
-    <description>Change animations.</description>
+    <label>shashlichnik animations framework</label>
+    <description>Change animations settings.</description>
     <tabWindowClass>Shashlichnik.Dialog_AnimationSettings</tabWindowClass>
     <order>120</order>
     <validWithoutMap>false</validWithoutMap>
     <minimized>True</minimized>
-    <iconPath>UI/Buttons/MainButtons/Ideoligions</iconPath>
+    <iconPath>UI/Shashl_Tab</iconPath>
   </MainButtonDef>
 
 </Defs>
