@@ -24,9 +24,14 @@ namespace Shashlichnik
             Scribe_Values.Look(ref ticks, nameof(ticks));
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                foreach (var state in animationStates)
+                animationStates ??= new List<AnimationState>();
+                foreach (var state in animationStates.ToArray())
                 {
                     state.PostLoad(parent as Pawn);
+                    if (state.RenderNode == null)
+                    {
+                        animationStates.Remove(state);
+                    }
                 }
             }
         }
@@ -208,6 +213,7 @@ namespace Shashlichnik
                     {
                         if (currentLine == null || currentLineId == null)
                         {
+
                             if (currentLineId == null)
                             {
                                 currentLineId = availableLinesIds.RandomElement();
