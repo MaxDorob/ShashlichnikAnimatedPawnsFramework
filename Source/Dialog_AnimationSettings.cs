@@ -363,6 +363,12 @@ namespace Shashlichnik
                         nodeToChange.AnimationState.drawData = null;
                     }
                 }
+                foreach (var nodeToChange in NodesToChange)
+                {
+                    nodeToChange.requestRecache = true;
+                    nodeToChange.AnimationState.currentKeyframe = null;
+                }
+                CurrentNode.tree.SetDirty();
                 CurrentNode.tree.pawn.Drawer.renderer.EnsureGraphicsInitialized();
 
 
