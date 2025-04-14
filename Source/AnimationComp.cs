@@ -33,6 +33,14 @@ namespace Shashlichnik
                         animationStates.Remove(state);
                     }
                 }
+                foreach (var state in animationStates)
+                {
+                    var stateDuplicates = animationStates.Except(state).Where(x=>x.id == state.id);
+                    if (stateDuplicates.Any())
+                    {
+                        Log.Error($"Found duplicates for {state.pawn} stateId {state.id}");
+                    }
+                }
             }
         }
         public override void PostSpawnSetup(bool respawningAfterLoad)
