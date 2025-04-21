@@ -26,7 +26,14 @@ namespace Shashlichnik
             {
                 if (animationState == null)
                 {
-                    animationState = tree.pawn.GetComp<AnimationComp>().GetAnimationState(this);
+                    var comp = tree.pawn.GetComp<AnimationComp>();
+                    if (comp == null)
+                    {
+                        Log.Warning($"{tree.pawn} ({tree.pawn.def.defName}) has no AnimationComp, ensure race is patched");
+                        comp = new AnimationComp() { parent = tree.pawn };
+                        tree.pawn.AllComps.Add(comp);
+                    }
+                    animationState = comp.GetAnimationState(this);
                     animationState.RenderNode = this;
                 }
                 return animationState;
