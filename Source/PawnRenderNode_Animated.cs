@@ -27,6 +27,7 @@ namespace Shashlichnik
                 if (animationState == null)
                 {
                     animationState = tree.pawn.GetComp<AnimationComp>().GetAnimationState(this);
+                    animationState.RenderNode = this;
                 }
                 return animationState;
             }

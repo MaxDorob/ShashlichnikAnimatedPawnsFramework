@@ -19,6 +19,16 @@ namespace Shashlichnik
         private List<AnimationState> animationStates = new List<AnimationState>();
         public override void PostExposeData()
         {
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                foreach (var state in animationStates.ToArray())
+                {
+                    if (state.ShouldBeRemoved)
+                    {
+                        animationStates.Remove(state);
+                    }
+                }
+            }
             base.PostExposeData();
             Scribe_Collections.Look(ref animationStates, nameof(animationStates));
             Scribe_Values.Look(ref ticks, nameof(ticks));
@@ -28,10 +38,6 @@ namespace Shashlichnik
                 foreach (var state in animationStates.ToArray())
                 {
                     state.PostLoad(parent as Pawn);
-                    if (state.RenderNode == null)
-                    {
-                        animationStates.Remove(state);
-                    }
                 }
                 foreach (var state in animationStates)
                 {
@@ -170,7 +176,20 @@ namespace Shashlichnik
                     }
                     return renderNode;
                 }
+                set => renderNode = value;
             }
+            public bool ShouldBeRemoved
+            {
+                get
+                {
+                    if (!pawn.IsWorldPawn() && pawn?.Drawer?.renderer?.renderTree?.rootNode != null)
+                    {
+                        return RenderNode == null || !pawn.Drawer.renderer.renderTree.rootNode.AllRenderNodes().Contains(RenderNode);
+                    }
+                    return false;
+                }
+            }
+
             public int AnimationTick
             {
                 get
