@@ -63,6 +63,10 @@ namespace Shashlichnik
                     }
                 }
             }
+            if (pawn.GetComps<AnimationComp>().Count() > 1)
+            {
+                Log.Warning("Detected two or more " + nameof(AnimationComp));
+            }
         }
         public override void CompTick()
         {
