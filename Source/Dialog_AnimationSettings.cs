@@ -424,7 +424,7 @@ namespace Shashlichnik
             Widgets.DrawLightHighlight(rect2);
             if (node.Props.useGraphic)
             {
-                Graphic graphic = node.Graphic;
+                Graphic graphic = node.PrimaryGraphic;
                 Texture texture;
                 if (graphic == null)
                 {
@@ -442,7 +442,7 @@ namespace Shashlichnik
                 }
             }
             Rect rect3 = new Rect(rect2.xMax + 4f, rect.y, rect.width - rect.height - 4f, rect.height);
-            if (!node.Worker.CanDrawNow(node, this.drawParms) || (node.Props.useGraphic && node.Graphic == null))
+            if (!node.Worker.CanDrawNow(node, this.drawParms) || (node.Props.useGraphic && node.PrimaryGraphic == null))
             {
                 GUI.color = ColoredText.SubtleGrayColor;
             }
